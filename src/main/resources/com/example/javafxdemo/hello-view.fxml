@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.web.*?>
+
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.javafxdemo.HelloController">
+  <tabs>
+    <Tab text="tables1">
+      <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="408.0" prefWidth="685.0">
+               <children>
+                  <TextField fx:id="para" layoutX="39.0" layoutY="45.0" prefHeight="23.0" prefWidth="201.0" />
+                  <Button fx:id="search" layoutX="253.0" layoutY="45.0" mnemonicParsing="false" onAction="#searchfofa" text="搜索" />
+                  <TextArea fx:id="text" layoutX="38.0" layoutY="95.0" prefHeight="200.0" prefWidth="200.0" />
+                  <AnchorPane layoutX="293.0" layoutY="95.0">
+                     <children>
+                        <WebView fx:id="webview" layoutX="6.0" layoutY="2.0" prefHeight="236.0" prefWidth="274.0" />
+                     </children>
+                  </AnchorPane>
+               </children></AnchorPane>
+      </content>
+    </Tab>
+    <Tab text="tables2">
+      <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+      </content>
+    </Tab>
+  </tabs>
+</TabPane>
