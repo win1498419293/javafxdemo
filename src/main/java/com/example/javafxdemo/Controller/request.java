@@ -1,5 +1,6 @@
 package com.example.javafxdemo.Controller;
 
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
@@ -23,16 +24,30 @@ import javax.net.ssl.X509TrustManager;
 import java.io.*;
 import java.security.cert.X509Certificate;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 
+
 import static com.example.javafxdemo.Controller.request.myTM.start;
 
-public class request {
+public class request  implements  Runnable{
+
+    @FXML
+    private Button threadbutt;
+
+    @FXML
+    private TextField threadbox;
+
     @FXML
     private Button button;
+
+    @FXML
+    private ComboBox combox;
 
     @FXML
     private TextArea text;
@@ -54,6 +69,13 @@ public class request {
         start(urls);
     }
 
+    @FXML
+    void setthread(ActionEvent event) {
+        int threadnum = Integer.parseInt(threadbox.getText());
+        StartThread(threadnum);
+
+
+    }
     public  static Queue<String> queue =new LinkedList<String>();
     private static RequestConfig config = null;//创建请求配置对象
     private static List<String> userAgentList = null;//代理对象集合
@@ -93,6 +115,33 @@ public class request {
             e.printStackTrace();
         }
         return socketFactory;
+    }
+
+    public static   void  StartThread(int threadnum){
+        // 创建一个线程池对象，控制要创建几个线程对象。
+        ExecutorService pool = Executors.newFixedThreadPool(threadnum);
+        pool.submit(new request());
+        pool.shutdown();
+
+    }
+
+    @Override
+    public void run() {
+        String urls = url.getText();
+        int intIndex = urls.indexOf("/");
+        int length = urls.length();
+        System.out.print(length);
+        System.out.print(intIndex);
+        if(intIndex == length){
+            System.out.println(urls);
+        }else{
+            urls=urls+"/";
+        }
+        try {
+            start(urls);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static class myTM implements TrustManager, X509TrustManager {

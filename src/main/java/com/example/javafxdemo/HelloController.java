@@ -4,6 +4,7 @@ import com.example.javafxdemo.Controller.request;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import java.io.*;
 import java.net.MalformedURLException;
@@ -14,6 +15,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+
+import static com.example.javafxdemo.Controller.request.StartThread;
 import static com.example.javafxdemo.Controller.request.myTM.start;
 
 public class HelloController {
@@ -27,6 +30,12 @@ public class HelloController {
     private TextField para;
     @FXML
     private Button button;
+
+    @FXML
+    private ComboBox combox;
+
+    @FXML
+    private TextField threadbox;
 
     @FXML
     private TextField url;
@@ -108,4 +117,8 @@ public class HelloController {
 
     }
 
+    public void setthread(ActionEvent actionEvent) {
+        int threadnum = Integer.parseInt(threadbox.getText());
+        StartThread(threadnum);
+    }
 }
