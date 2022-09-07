@@ -1,5 +1,6 @@
 package com.example.javafxdemo.Controller;
 
+import javafx.scene.control.TextField;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.client.config.RequestConfig;
@@ -19,14 +20,41 @@ import org.apache.http.util.EntityUtils;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-import java.io.IOException;
+import java.io.*;
 import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
+
+import static com.example.javafxdemo.Controller.request.myTM.start;
 
 public class request {
+    @FXML
+    private Button button;
 
+    @FXML
+    private TextArea text;
+
+    @FXML
+    private TextField url;
+    @FXML
+    void stratscan(ActionEvent event) throws Exception {
+        String urls = url.getText();
+        int intIndex = urls.indexOf("/");
+        int length = urls.length();
+        System.out.print(length);
+        System.out.print(intIndex);
+        if(intIndex == length){
+            System.out.println(urls);
+        }else{
+            urls=urls+"/";
+        }
+        start(urls);
+    }
+
+    public  static Queue<String> queue =new LinkedList<String>();
     private static RequestConfig config = null;//创建请求配置对象
     private static List<String> userAgentList = null;//代理对象集合
 
@@ -49,6 +77,7 @@ public class request {
         userAgentList.add("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:63.0) Gecko/20100101 Firefox/63.0");
     }
 
+
     //创建并返回SSLConnectionSocketFactory对象
     public static SSLConnectionSocketFactory trustHttpsCertificates() throws Exception {
         SSLConnectionSocketFactory socketFactory = null;
@@ -66,7 +95,7 @@ public class request {
         return socketFactory;
     }
 
-    static class myTM implements TrustManager, X509TrustManager {
+    public static class myTM implements TrustManager, X509TrustManager {
 
         public X509Certificate[] getAcceptedIssuers() {
             return null;
@@ -80,7 +109,7 @@ public class request {
 
         }
 
-        public static void getHttp() throws Exception {
+        public static void getHttp(String para,String url) throws Exception {
             Registry<ConnectionSocketFactory> registry
                     = RegistryBuilder.<ConnectionSocketFactory>create()
                     .register("http", PlainConnectionSocketFactory.INSTANCE)
@@ -94,7 +123,7 @@ public class request {
             //创建HttpClient对象
             CloseableHttpClient httpClient = builder.build();
             //创建HttpGet请求
-            HttpGet httpGet = new HttpGet("https://www.baidu.com/");
+            HttpGet httpGet = new HttpGet(url+para);
             httpGet.setHeader("User-Agent", userAgentList.get(new Random().nextInt(userAgentList.size())));
             httpGet.setConfig(config);
             httpGet.setHeader("Accept-Encoding", "identity");
@@ -103,14 +132,15 @@ public class request {
                 //使用HttpClient发起请求
                 response = httpClient.execute(httpGet);
                 //判断响应状态码是否为200
-                if (response.getStatusLine().getStatusCode() == 200) {
+                if (response.getStatusLine().getStatusCode() == 200&&response.getStatusLine().getStatusCode() ==403&&response.getStatusLine().getStatusCode() ==302) {
                     //如果为200表示请求成功，获取返回数据
                     String content = EntityUtils.toString(response.getEntity(), "UTF-8");
                     //打印数据长度
                     //System.out.println(content);
-                    System.out.println(response.getStatusLine().getStatusCode());
+                    System.out.print(url+para);
+                    System.out.println("响应状态码:"+response.getStatusLine().getStatusCode());
                     long len = response.getEntity().getContentLength();
-                    System.out.println(len);
+                    System.out.println("响应数据包大小:"+len);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -127,9 +157,41 @@ public class request {
             }
 
         }
+        public static void pathpara(String path) throws IOException {
+            File file = new File(path);
+            StringBuilder result = new StringBuilder();
+            try{
+                BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));//构造一个BufferedReader类来读取文件
 
+                String s = null;
+                while((s = br.readLine())!=null){//使用readLine方法，一次读一行
+                    queue.offer(s);
+                    //System.out.print(System.lineSeparator() + s);
+                }
+                br.close();
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+        public static void start(String url) throws Exception {
+            String path="D://Tools/spring.txt";
+            pathpara(path);
+            String para;
+            while((para=queue.poll())!=null){
+                getHttp(para,url);
+            }
+        }
         public static void main(String[] args) throws Exception {
-            getHttp();
+            String path="D://Tools/spring.txt";
+            //request re = new request();
+            pathpara(path);
+            String url="https://www.baidu.com/";
+            String para;
+            while((para=queue.poll())!=null){
+                getHttp(para,url);
+                //System.out.print(str);
+
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.javafxdemo;
 
+import com.example.javafxdemo.Controller.request;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -11,9 +12,9 @@ import java.net.URLConnection;
 import com.example.javafxdemo.Controller.base64endode;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import static com.example.javafxdemo.Controller.request.myTM.start;
 
 public class HelloController {
 
@@ -24,7 +25,25 @@ public class HelloController {
 
     @FXML
     private TextField para;
+    @FXML
+    private Button button;
 
+    @FXML
+    private TextField url;
+    @FXML
+    void stratscan(ActionEvent event) throws Exception {
+        String urls = url.getText();
+        int intIndex = urls.indexOf("/");
+        int length = urls.length();
+        System.out.println("length"+length);
+        System.out.println("intIndex"+intIndex);
+        if(intIndex == length+1){
+            System.out.println(urls);
+        }else{
+            urls=urls+"/";
+        }
+        start(urls);
+    }
     @FXML
     void searchfofa(ActionEvent event) {
         String paratext = para.getText();
