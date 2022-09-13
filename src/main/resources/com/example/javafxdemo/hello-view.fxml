@@ -4,9 +4,22 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.web.*?>
 
-<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.javafxdemo.HelloController">
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="476.0" prefWidth="855.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.javafxdemo.HelloController">
   <tabs>
-    <Tab text="tables1">
+    <Tab text="目录扫描">
+      <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+              <children>
+                  <TextField fx:id="url" layoutX="61.0" layoutY="49.0" />
+                  <Button fx:id="scanbut" layoutX="245.0" layoutY="49.0" mnemonicParsing="false" onAction="#stratscan" text="开始" />
+                  <TextArea fx:id="area" layoutX="33.0" layoutY="109.0" prefHeight="231.0" prefWidth="500.0" />
+                  <TextField fx:id="threadbox" layoutX="315.0" layoutY="49.0" prefHeight="23.0" prefWidth="80.0" promptText="线程" />
+                  <Button fx:id="threadbut" layoutX="417.0" layoutY="49.0" mnemonicParsing="false" onAction="#setthread" text="确定" />
+                  <ComboBox fx:id="combox" layoutX="579.0" layoutY="49.0" prefWidth="150.0" />
+              </children></AnchorPane>
+      </content>
+    </Tab>
+    <Tab text="网页爬虫">
       <content>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="408.0" prefWidth="685.0">
                <children>
@@ -19,11 +32,6 @@
                      </children>
                   </AnchorPane>
                </children></AnchorPane>
-      </content>
-    </Tab>
-    <Tab text="tables2">
-      <content>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
       </content>
     </Tab>
   </tabs>

@@ -2,8 +2,9 @@ package com.example.javafxdemo.Controller;
 
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
-import org.apache.http.HttpEntity;
+import javafx.scene.web.WebView;
 import org.apache.http.HttpHost;
+import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -23,6 +24,7 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import java.io.*;
 import java.security.cert.X509Certificate;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -35,25 +37,38 @@ import javafx.scene.control.TextArea;
 
 import static com.example.javafxdemo.Controller.request.myTM.start;
 
-public class request  implements  Runnable{
+public class request {
 
     @FXML
-    private Button threadbutt;
+    private TextArea area;
+
+    @FXML
+    private Button scanbut;
+
+    @FXML
+    private Button search;
+
+    @FXML
+    private WebView webview;
 
     @FXML
     private TextField threadbox;
 
     @FXML
-    private Button button;
+    private TextField para;
 
     @FXML
-    private ComboBox combox;
+    private Button threadbut;
+
+    @FXML
+    private ComboBox<?> combox;
 
     @FXML
     private TextArea text;
 
     @FXML
-    private TextField url;
+    private  TextField url;
+
     @FXML
     void stratscan(ActionEvent event) throws Exception {
         String urls = url.getText();
@@ -69,13 +84,6 @@ public class request  implements  Runnable{
         start(urls);
     }
 
-    @FXML
-    void setthread(ActionEvent event) {
-        int threadnum = Integer.parseInt(threadbox.getText());
-        StartThread(threadnum);
-
-
-    }
     public  static Queue<String> queue =new LinkedList<String>();
     private static RequestConfig config = null;//创建请求配置对象
     private static List<String> userAgentList = null;//代理对象集合
@@ -117,32 +125,28 @@ public class request  implements  Runnable{
         return socketFactory;
     }
 
-    public static   void  StartThread(int threadnum){
+    public  void  StartThread(String url,int threadnum){
         // 创建一个线程池对象，控制要创建几个线程对象。
         ExecutorService pool = Executors.newFixedThreadPool(threadnum);
-        pool.submit(new request());
-        pool.shutdown();
+        Runnable runnable = new Runnable(){
+            @Override
+            public void run() {
+                System.out.println(url);
+                System.out.println(threadnum);
+                try {
+                    start(url);
+                    //Thread.sleep(10);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                System.out.println(Thread.currentThread().getName());
+            }
+        };
+        // 将任务交给线程池管理
+        pool.execute(runnable);
 
     }
 
-    @Override
-    public void run() {
-        String urls = url.getText();
-        int intIndex = urls.indexOf("/");
-        int length = urls.length();
-        System.out.print(length);
-        System.out.print(intIndex);
-        if(intIndex == length){
-            System.out.println(urls);
-        }else{
-            urls=urls+"/";
-        }
-        try {
-            start(urls);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     public static class myTM implements TrustManager, X509TrustManager {
 
@@ -173,6 +177,8 @@ public class request  implements  Runnable{
             CloseableHttpClient httpClient = builder.build();
             //创建HttpGet请求
             HttpGet httpGet = new HttpGet(url+para);
+            RequestConfig defaultConfig = RequestConfig.custom().setCookieSpec(CookieSpecs.STANDARD).build();
+            httpGet.setConfig(defaultConfig);
             httpGet.setHeader("User-Agent", userAgentList.get(new Random().nextInt(userAgentList.size())));
             httpGet.setConfig(config);
             httpGet.setHeader("Accept-Encoding", "identity");
@@ -180,8 +186,9 @@ public class request  implements  Runnable{
             try {
                 //使用HttpClient发起请求
                 response = httpClient.execute(httpGet);
+                request re =new request();
                 //判断响应状态码是否为200
-                if (response.getStatusLine().getStatusCode() == 200&&response.getStatusLine().getStatusCode() ==403&&response.getStatusLine().getStatusCode() ==302) {
+                if (response.getStatusLine().getStatusCode() == 200||response.getStatusLine().getStatusCode() ==403||response.getStatusLine().getStatusCode() ==302) {
                     //如果为200表示请求成功，获取返回数据
                     String content = EntityUtils.toString(response.getEntity(), "UTF-8");
                     //打印数据长度
@@ -189,7 +196,9 @@ public class request  implements  Runnable{
                     System.out.print(url+para);
                     System.out.println("响应状态码:"+response.getStatusLine().getStatusCode());
                     long len = response.getEntity().getContentLength();
+                    re.area.setText("1111111111111");
                     System.out.println("响应数据包大小:"+len);
+
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -223,12 +232,16 @@ public class request  implements  Runnable{
             }
         }
         public static void start(String url) throws Exception {
-            String path="D://Tools/spring.txt";
+            String path="src/main/resources/com/example/javafxdemo/spring.txt";
             pathpara(path);
             String para;
+            Date today = new Date();
+            System.out.println(today.getTime()+1000*3600*24*30L);
             while((para=queue.poll())!=null){
                 getHttp(para,url);
             }
+            Date nextMonth = new Date(today.getTime()+1000*3600*24*30L);
+            System.out.println(nextMonth);
         }
         public static void main(String[] args) throws Exception {
             String path="D://Tools/spring.txt";

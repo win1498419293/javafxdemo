@@ -16,41 +16,44 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 
-import static com.example.javafxdemo.Controller.request.StartThread;
 import static com.example.javafxdemo.Controller.request.myTM.start;
 
 public class HelloController {
 
     @FXML
+    private TextArea area;
+
+    @FXML
+    private Button scanbut;
+
+    @FXML
     private Button search;
-    @FXML
-    private TextArea text;
 
     @FXML
-    private TextField para;
-    @FXML
-    private Button button;
-
-    @FXML
-    private ComboBox combox;
+    private WebView webview;
 
     @FXML
     private TextField threadbox;
 
     @FXML
+    private TextField para;
+
+    @FXML
+    private Button threadbut;
+
+    @FXML
+    private ComboBox<?> combox;
+
+    @FXML
+    private TextArea text;
+
+    @FXML
     private TextField url;
+
     @FXML
     void stratscan(ActionEvent event) throws Exception {
         String urls = url.getText();
-        int intIndex = urls.indexOf("/");
-        int length = urls.length();
-        System.out.println("length"+length);
-        System.out.println("intIndex"+intIndex);
-        if(intIndex == length+1){
-            System.out.println(urls);
-        }else{
-            urls=urls+"/";
-        }
+        System.out.println(urls);
         start(urls);
     }
     @FXML
@@ -119,6 +122,8 @@ public class HelloController {
 
     public void setthread(ActionEvent actionEvent) {
         int threadnum = Integer.parseInt(threadbox.getText());
-        StartThread(threadnum);
+        String urls = url.getText();
+        request re =new request();
+        re.StartThread(urls,threadnum);
     }
 }
