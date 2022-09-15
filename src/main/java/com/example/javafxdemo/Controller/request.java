@@ -40,7 +40,7 @@ import static com.example.javafxdemo.Controller.request.myTM.start;
 public class request {
 
     @FXML
-    private TextArea area;
+    public static TextArea area;
 
     @FXML
     private Button scanbut;
@@ -72,19 +72,12 @@ public class request {
     @FXML
     void stratscan(ActionEvent event) throws Exception {
         String urls = url.getText();
-        int intIndex = urls.indexOf("/");
-        int length = urls.length();
-        System.out.print(length);
-        System.out.print(intIndex);
-        if(intIndex == length){
-            System.out.println(urls);
-        }else{
-            urls=urls+"/";
-        }
+        System.out.println(urls);
         start(urls);
     }
 
     public  static Queue<String> queue =new LinkedList<String>();
+    public  static Queue<String> msg =new LinkedList<String>();
     private static RequestConfig config = null;//创建请求配置对象
     private static List<String> userAgentList = null;//代理对象集合
 
@@ -193,11 +186,12 @@ public class request {
                     String content = EntityUtils.toString(response.getEntity(), "UTF-8");
                     //打印数据长度
                     //System.out.println(content);
-                    System.out.print(url+para);
-                    System.out.println("响应状态码:"+response.getStatusLine().getStatusCode());
+                    //System.out.print(url+para);
+                    String showmsg=url+para+"  响应状态码:"+response.getStatusLine().getStatusCode()+"  响应数据包大小:"+response.getEntity().getContentLength();
+                    //System.out.println("响应状态码:"+response.getStatusLine().getStatusCode());
                     long len = response.getEntity().getContentLength();
-                    re.area.setText("1111111111111");
-                    System.out.println("响应数据包大小:"+len);
+                    msg.offer(showmsg);
+                   // System.out.println("响应数据包大小:"+len);
 
                 }
             } catch (Exception e) {

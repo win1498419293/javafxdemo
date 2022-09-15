@@ -120,10 +120,16 @@ public class HelloController {
 
     }
 
-    public void setthread(ActionEvent actionEvent) {
+    public void setthread(ActionEvent actionEvent) throws Exception {
         int threadnum = Integer.parseInt(threadbox.getText());
         String urls = url.getText();
         request re =new request();
         re.StartThread(urls,threadnum);
+        start(urls);
+        String para;
+        while((para=re.msg.poll())!=null){
+            area.appendText(para+"\r\n");
+            System.out.println(para);
+        }
     }
 }
