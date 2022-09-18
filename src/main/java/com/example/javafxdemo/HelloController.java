@@ -3,15 +3,13 @@ package com.example.javafxdemo;
 import com.example.javafxdemo.Controller.request;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
+
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import com.example.javafxdemo.Controller.base64endode;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
@@ -28,6 +26,9 @@ public class HelloController {
 
     @FXML
     private Button search;
+
+    @FXML
+    private ChoiceBox<?> requmode;
 
     @FXML
     private WebView webview;
@@ -53,8 +54,16 @@ public class HelloController {
     @FXML
     void stratscan(ActionEvent event) throws Exception {
         String urls = url.getText();
+        request re =new request();
+        String requmodes = (String) requmode.getValue();
+        System.out.println(requmodes);
         System.out.println(urls);
-        start(urls);
+        start(urls,requmodes);
+        String para;
+        while((para=re.msg.poll())!=null){
+            area.appendText(para+"\r\n");
+            System.out.println(para);
+        }
     }
     @FXML
     void searchfofa(ActionEvent event) {
@@ -123,9 +132,10 @@ public class HelloController {
     public void setthread(ActionEvent actionEvent) throws Exception {
         int threadnum = Integer.parseInt(threadbox.getText());
         String urls = url.getText();
+        String requmodes = (String) requmode.getValue();
         request re =new request();
-        re.StartThread(urls,threadnum);
-        start(urls);
+        start(urls,requmodes);
+        re.StartThread(urls,threadnum,requmodes);
         String para;
         while((para=re.msg.poll())!=null){
             area.appendText(para+"\r\n");

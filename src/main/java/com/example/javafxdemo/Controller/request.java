@@ -1,7 +1,7 @@
 package com.example.javafxdemo.Controller;
 
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
+import javafx.collections.FXCollections;
+import javafx.scene.control.*;
 import javafx.scene.web.WebView;
 import org.apache.http.HttpHost;
 import org.apache.http.client.config.CookieSpecs;
@@ -24,15 +24,12 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import java.io.*;
 import java.security.cert.X509Certificate;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
 
 
 import static com.example.javafxdemo.Controller.request.myTM.start;
@@ -47,6 +44,9 @@ public class request {
 
     @FXML
     private Button search;
+
+    @FXML
+    private ChoiceBox<Object> requmode;
 
     @FXML
     private WebView webview;
@@ -67,14 +67,9 @@ public class request {
     private TextArea text;
 
     @FXML
-    private  TextField url;
+    private TextField url;
 
     @FXML
-    void stratscan(ActionEvent event) throws Exception {
-        String urls = url.getText();
-        System.out.println(urls);
-        start(urls);
-    }
 
     public  static Queue<String> queue =new LinkedList<String>();
     public  static Queue<String> msg =new LinkedList<String>();
@@ -89,7 +84,7 @@ public class request {
                 .setConnectTimeout(10000)//设置创建连接超时时间
                 .setSocketTimeout(10000)//设置连接超时时间
                 .setConnectionRequestTimeout(10000)//设置请求超时时间
-                .setProxy(proxy)//设置代理
+               // .setProxy(proxy)//设置代理
                 .build();
         userAgentList = new ArrayList<String>();
         userAgentList.add("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36");
@@ -118,7 +113,7 @@ public class request {
         return socketFactory;
     }
 
-    public  void  StartThread(String url,int threadnum){
+    public  void  StartThread(String url,int threadnum,String requmodes){
         // 创建一个线程池对象，控制要创建几个线程对象。
         ExecutorService pool = Executors.newFixedThreadPool(threadnum);
         Runnable runnable = new Runnable(){
@@ -127,7 +122,7 @@ public class request {
                 System.out.println(url);
                 System.out.println(threadnum);
                 try {
-                    start(url);
+                    start(url,requmodes);
                     //Thread.sleep(10);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -209,6 +204,60 @@ public class request {
             }
 
         }
+        public static void postHttp(String para,String url) throws Exception {
+            Registry<ConnectionSocketFactory> registry
+                    = RegistryBuilder.<ConnectionSocketFactory>create()
+                    .register("http", PlainConnectionSocketFactory.INSTANCE)
+                    .register("https", trustHttpsCertificates())
+                    .build();
+
+            PoolingHttpClientConnectionManager connManager = new
+                    PoolingHttpClientConnectionManager(registry);
+            //配置了HttpClients,创建自定义的httpclient对象
+            HttpClientBuilder builder = HttpClients.custom().setConnectionManager(connManager);
+            //创建HttpClient对象
+            CloseableHttpClient httpClient = builder.build();
+            //创建HttpGet请求
+            HttpGet httpPost = new HttpGet(url+para);
+            RequestConfig defaultConfig = RequestConfig.custom().setCookieSpec(CookieSpecs.STANDARD).build();
+            httpPost.setConfig(defaultConfig);
+            httpPost.setHeader("User-Agent", userAgentList.get(new Random().nextInt(userAgentList.size())));
+            httpPost.setConfig(config);
+            httpPost.setHeader("Accept-Encoding", "identity");
+            CloseableHttpResponse response = null;
+            try {
+                //使用HttpClient发起请求
+                response = httpClient.execute(httpPost);
+                request re =new request();
+                //判断响应状态码是否为200
+                if (response.getStatusLine().getStatusCode() == 200||response.getStatusLine().getStatusCode() ==403||response.getStatusLine().getStatusCode() ==302) {
+                    //如果为200表示请求成功，获取返回数据
+                    String content = EntityUtils.toString(response.getEntity(), "UTF-8");
+                    //打印数据长度
+                    //System.out.println(content);
+                    //System.out.print(url+para);
+                    String showmsg=url+para+"  响应状态码:"+response.getStatusLine().getStatusCode()+"  响应数据包大小:"+response.getEntity().getContentLength();
+                    //System.out.println("响应状态码:"+response.getStatusLine().getStatusCode());
+                    long len = response.getEntity().getContentLength();
+                    msg.offer(showmsg);
+                    // System.out.println("响应数据包大小:"+len);
+
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                //释放连接
+                if (response == null) {
+                    try {
+                        response.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    httpClient.close();
+                }
+            }
+
+        }
         public static void pathpara(String path) throws IOException {
             File file = new File(path);
             StringBuilder result = new StringBuilder();
@@ -225,18 +274,30 @@ public class request {
                 e.printStackTrace();
             }
         }
-        public static void start(String url) throws Exception {
+        public static void start(String url,String requmodes) throws Exception {
+            request re=new request();
             String path="src/main/resources/com/example/javafxdemo/spring.txt";
             pathpara(path);
             String para;
             Date today = new Date();
-            System.out.println(today.getTime()+1000*3600*24*30L);
+            //String value = (String) re.requmode.getValue();
+            //System.out.println(value);
+            Date starttime = new Date(today.getTime()+1000*3600*24*30L);
+            System.out.println("starttime:"+starttime);
             while((para=queue.poll())!=null){
-                getHttp(para,url);
+                if(requmodes.equals("Get")){
+                    getHttp(para,url);
+                }else{
+                    postHttp(para,url);
+                }
+
             }
-            Date nextMonth = new Date(today.getTime()+1000*3600*24*30L);
-            System.out.println(nextMonth);
+            Date endday = new Date();
+            Date nextMonth = new Date(endday.getTime()+1000*3600*24*30L);
+            System.out.println("endtime:"+nextMonth);
         }
+
+
         public static void main(String[] args) throws Exception {
             String path="D://Tools/spring.txt";
             //request re = new request();
