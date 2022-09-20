@@ -204,6 +204,11 @@ public class request {
             }
 
         }
+
+        /**
+         *
+         * post请求方法
+         */
         public static void postHttp(String para,String url) throws Exception {
             Registry<ConnectionSocketFactory> registry
                     = RegistryBuilder.<ConnectionSocketFactory>create()
@@ -258,12 +263,15 @@ public class request {
             }
 
         }
+        /**
+         *
+         * 读取目录文件方法
+         */
         public static void pathpara(String path) throws IOException {
             File file = new File(path);
             StringBuilder result = new StringBuilder();
             try{
                 BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));//构造一个BufferedReader类来读取文件
-
                 String s = null;
                 while((s = br.readLine())!=null){//使用readLine方法，一次读一行
                     queue.offer(s);
@@ -274,6 +282,11 @@ public class request {
                 e.printStackTrace();
             }
         }
+
+        /**
+         *
+         * 启动请求方法
+         */
         public static void start(String url,String requmodes,String path) throws Exception {
             request re=new request();
             //String path="src/main/resources/com/example/javafxdemo/spring.txt";
@@ -282,6 +295,7 @@ public class request {
             Date today = new Date();
             //String value = (String) re.requmode.getValue();
             //System.out.println(value);
+            //打印开始时间
             Date starttime = new Date(today.getTime()+1000*3600*24*30L);
             System.out.println("starttime:"+starttime);
             while((para=queue.poll())!=null){

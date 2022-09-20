@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.web.*?>
 
-<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="476.0" prefWidth="855.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.javafxdemo.HelloController">
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="476.0" prefWidth="855.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.javafxdemo.HelloController">
   <tabs>
     <Tab text="目录扫描">
       <content>
@@ -31,7 +31,8 @@
                       <Separator />
                       <String fx:value="Post" />
                   </ChoiceBox>
-                  <Label fx:id="label" layoutX="321.0" layoutY="31.0" />
+                  <Label fx:id="threadlabel" layoutX="321.0" layoutY="31.0" />
+                  <Label fx:id="urllabel" layoutX="33.0" layoutY="80.0" prefHeight="15.0" prefWidth="144.0" />
               </children></AnchorPane>
       </content>
     </Tab>
