@@ -1,27 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.web.*?>
 
-<?import java.lang.String?>
-<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="476.0" prefWidth="855.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.javafxdemo.HelloController">
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="476.0" prefWidth="855.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.javafxdemo.HelloController">
   <tabs>
     <Tab text="目录扫描">
       <content>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
               <children>
+                  <AnchorPane layoutX="436.0" layoutY="49.0">
+                     <children>
+                        <ComboBox fx:id="combox" onAction="#setdic" prefHeight="23.0" prefWidth="90.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                           <effect>
+                              <Bloom />
+                           </effect>
+                        </ComboBox>
+                     </children>
+                  </AnchorPane>
                   <TextField fx:id="url" layoutX="29.0" layoutY="49.0" prefHeight="23.0" prefWidth="149.0" />
                   <Button fx:id="scanbut" layoutX="188.0" layoutY="49.0" mnemonicParsing="false" onAction="#stratscan" text="开始" />
                   <TextArea fx:id="area" layoutX="33.0" layoutY="109.0" prefHeight="231.0" prefWidth="500.0" />
                   <TextField fx:id="threadbox" layoutX="317.0" layoutY="49.0" prefHeight="23.0" prefWidth="39.0" promptText="线程" />
                   <Button fx:id="threadbut" layoutX="379.0" layoutY="49.0" mnemonicParsing="false" onAction="#setthread" prefHeight="23.0" prefWidth="41.0" text="确定" />
-                  <ComboBox fx:id="combox" layoutX="436.0" layoutY="49.0" prefHeight="23.0" prefWidth="90.0" />
-                  <ChoiceBox fx:id="requmode" value="Get" layoutX="249.0" layoutY="49.0" prefHeight="23.0" prefWidth="52.0" >
+                  <ChoiceBox fx:id="requmode" layoutX="249.0" layoutY="49.0" prefHeight="23.0" prefWidth="52.0" value="Get">
                       <String fx:value="Get" />
                       <Separator />
                       <String fx:value="Post" />
                   </ChoiceBox>
+                  <Label fx:id="label" layoutX="321.0" layoutY="31.0" />
               </children></AnchorPane>
       </content>
     </Tab>

@@ -1,11 +1,13 @@
 package com.example.javafxdemo;
 
 import com.example.javafxdemo.Controller.request;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -13,6 +15,7 @@ import com.example.javafxdemo.Controller.base64endode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import org.omg.Messaging.SyncScopeHelper;
 
 import static com.example.javafxdemo.Controller.request.myTM.start;
 
@@ -43,34 +46,72 @@ public class HelloController {
     private Button threadbut;
 
     @FXML
-    private ComboBox<?> combox;
+    public ComboBox<String> combox;
 
     @FXML
     private TextArea text;
 
     @FXML
     private TextField url;
+    @FXML
+    private Label label;
+
+    public String path;
+
+    public void initialize () {
+        String path = "src/main/resources/com/example/javafxdemo/dictionary/";
+        File f = new File(path);
+        if (!f.exists()) {
+            System.out.println(path + " not exists");
+            return;
+        }
+        File result[] = f.listFiles();
+        for (int i = 0; i < result.length; i++) {
+            File fs = result[i];
+            combox.getItems().add(fs.getName());
+        }
+        String paths = combox.getValue();
+        if (paths==null){
+            path = "src/main/resources/com/example/javafxdemo/dictionary/spring.txt";
+        }else{
+            path = "src/main/resources/com/example/javafxdemo/dictionary/"+paths;
+        }
+        combox.getSelectionModel().select(0);
+    }
+
+    @FXML
+    void setdic(ActionEvent event) {
+       String paths = combox.getValue();
+        if (paths==""){
+            path = "src/main/resources/com/example/javafxdemo/dictionary/spring.txt";
+        }else{
+            path = "src/main/resources/com/example/javafxdemo/dictionary/"+paths;
+        }
+        System.out.println(combox.getValue());
+    }
+
 
     @FXML
     void stratscan(ActionEvent event) throws Exception {
         String urls = url.getText();
-        request re =new request();
+        request re = new request();
         String requmodes = (String) requmode.getValue();
         System.out.println(requmodes);
         System.out.println(urls);
-        start(urls,requmodes);
+        start(urls, requmodes, path);
         String para;
-        while((para=re.msg.poll())!=null){
-            area.appendText(para+"\r\n");
+        while ((para = re.msg.poll()) != null) {
+            area.appendText(para + "\r\n");
             System.out.println(para);
         }
     }
+
     @FXML
     void searchfofa(ActionEvent event) {
         String paratext = para.getText();
         String cookies = "befor_router=; Hm_lvt_19b7bde5627f2f57f67dfb76eedcf989=1661350264; fofa_token=eyJhbGciOiJIUzUxMiIsImtpZCI6Ik5XWTVZakF4TVRkalltSTJNRFZsWXpRM05EWXdaakF3TURVMlkyWTNZemd3TUdRd1pUTmpZUT09IiwidHlwIjoiSldUIn0.eyJpZCI6ODg3NjQsIm1pZCI6MTAwMDU0NDc5LCJ1c2VybmFtZSI6InllbG91IiwiZXhwIjoxNjYxNjA5Njk0fQ.hxksGY6yRLm35xSijjGQvh6U-utr7lJUFf8CqQiRh6B3iJ3_ItvYO90tr8e7D-DZEqFFmcyJ992cfkeVLOWg5Q; user=%7B%22id%22%3A88764%2C%22mid%22%3A100054479%2C%22is_admin%22%3Afalse%2C%22username%22%3A%22yelou%22%2C%22nickname%22%3A%22%22%2C%22email%22%3A%22z3151431902%40gmail.com%22%2C%22avatar_medium%22%3A%22https%3A%2F%2Fnosec.org%2Fmissing.jpg%22%2C%22avatar_thumb%22%3A%22https%3A%2F%2Fnosec.org%2Fmissing.jpg%22%2C%22key%22%3A%22b22b91938bbd58fb468878ba29b6bf2e%22%2C%22rank_name%22%3A%22%E6%B3%A8%E5%86%8C%E7%94%A8%E6%88%B7%22%2C%22rank_level%22%3A0%2C%22company_name%22%3A%22%22%2C%22coins%22%3A0%2C%22can_pay_coins%22%3A0%2C%22credits%22%3A1%2C%22expiration%22%3A%22-%22%2C%22login_at%22%3A1661350494%7D; baseShowChange=false; Hm_lpvt_19b7bde5627f2f57f67dfb76eedcf989=1661350569";
         base64endode base64 = new base64endode();
-        String qbase64=base64.base64(paratext);
+        String qbase64 = base64.base64(paratext);
         URL url = null;
         //创建连接
         URLConnection conn = null;
@@ -86,11 +127,11 @@ public class HelloController {
         //明确你要爬取内容的地址
         try {
             //java中的异常处理机制 Java中的异常是有责任制的 不是所有的异常都往外抛
-            url = new URL("https://fofa.info/result?qbase64="+qbase64);
+            url = new URL("https://fofa.info/result?qbase64=" + qbase64);
             WebView browser = new WebView();
             WebEngine webEngine = browser.getEngine();
-            webEngine.load("https://fofa.info/result?qbase64="+qbase64);
-            AnchorPane anc =new AnchorPane(browser);
+            webEngine.load("https://fofa.info/result?qbase64=" + qbase64);
+            AnchorPane anc = new AnchorPane(browser);
             System.out.print(url);
             //创建连接
             conn = url.openConnection();
@@ -106,7 +147,7 @@ public class HelloController {
 
             StringBuilder a = new StringBuilder();
             //读取一行内容
-            while((str = br.readLine()) != null){
+            while ((str = br.readLine()) != null) {
                 a.append(str);
                 text.setText(a.toString());
             }
@@ -117,7 +158,7 @@ public class HelloController {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if (br != null){
+            if (br != null) {
                 //关闭流
                 try {
                     br.close();
@@ -129,17 +170,27 @@ public class HelloController {
 
     }
 
-    public void setthread(ActionEvent actionEvent) throws Exception {
-        int threadnum = Integer.parseInt(threadbox.getText());
-        String urls = url.getText();
-        String requmodes = (String) requmode.getValue();
-        request re =new request();
-        start(urls,requmodes);
-        re.StartThread(urls,threadnum,requmodes);
-        String para;
-        while((para=re.msg.poll())!=null){
-            area.appendText(para+"\r\n");
-            System.out.println(para);
+    public void setthread(ActionEvent actionEvent) throws Exception, InvocationTargetException {
+        int threadnum = 0;
+        if (threadbox.getText() != "") {
+            try{
+                threadnum = Integer.parseInt(threadbox.getText());
+                if (threadnum < '0' || threadnum > '9') ;
+            }catch (Exception e){
+                label.setText("请输入数字");
+            }
+
         }
+            String urls = url.getText();
+            String requmodes = (String) requmode.getValue();
+            request re = new request();
+            start(urls, requmodes, path);
+            re.StartThread(urls, threadnum, requmodes, path);
+            String para;
+            while ((para = re.msg.poll()) != null) {
+                area.appendText(para + "\r\n");
+                System.out.println(para);
+            }
+        }
+
     }
-}

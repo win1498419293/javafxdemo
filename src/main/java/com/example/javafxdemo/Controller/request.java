@@ -113,7 +113,7 @@ public class request {
         return socketFactory;
     }
 
-    public  void  StartThread(String url,int threadnum,String requmodes){
+    public  void  StartThread(String url,int threadnum,String requmodes,String path){
         // 创建一个线程池对象，控制要创建几个线程对象。
         ExecutorService pool = Executors.newFixedThreadPool(threadnum);
         Runnable runnable = new Runnable(){
@@ -122,7 +122,7 @@ public class request {
                 System.out.println(url);
                 System.out.println(threadnum);
                 try {
-                    start(url,requmodes);
+                    start(url,requmodes,path);
                     //Thread.sleep(10);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -274,9 +274,9 @@ public class request {
                 e.printStackTrace();
             }
         }
-        public static void start(String url,String requmodes) throws Exception {
+        public static void start(String url,String requmodes,String path) throws Exception {
             request re=new request();
-            String path="src/main/resources/com/example/javafxdemo/spring.txt";
+            //String path="src/main/resources/com/example/javafxdemo/spring.txt";
             pathpara(path);
             String para;
             Date today = new Date();

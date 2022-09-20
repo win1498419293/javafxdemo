@@ -2,12 +2,15 @@ package com.example.javafxdemo;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.web.WebEngine;
@@ -20,17 +23,12 @@ public class HelloApplication extends Application {
     private TextField para;
 
     @FXML
-    private ChoiceBox<?> requmode;
+    private ChoiceBox<String> requmode;
+
+    @FXML
 
     public void init() throws Exception{
-
-       /** ChoiceBox cb = new ChoiceBox();
-        cb.getItems().add("Get");
-        cb.getItems().add("Post");
-        this.requmode = cb;
-        System.out.print("init()");
-        **/
-        //System.out.print(requmode.getItems());
+        HelloController hc=new HelloController();
 
     }
     @Override
