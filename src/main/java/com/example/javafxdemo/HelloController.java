@@ -1,5 +1,6 @@
 package com.example.javafxdemo;
 
+import com.example.javafxdemo.Controller.Taskdemo;
 import com.example.javafxdemo.Controller.request;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -15,6 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.example.javafxdemo.Controller.base64endode;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -66,6 +68,9 @@ public class HelloController {
     private Label urllabel;
 
     public String path;
+
+    @FXML
+    private ProgressBar probox;
 
 
     /**
@@ -273,4 +278,12 @@ public class HelloController {
             }
         }
         }
+
+    public void startpro(ActionEvent actionEvent) throws Exception {
+        Taskdemo tk=new Taskdemo();
+        Thread td=new Thread(tk);
+        probox.progressProperty().bind(tk.progressProperty());
+        new Thread(tk).start();
+
     }
+}
