@@ -75,6 +75,7 @@ public class request {
     public  static Queue<String> msg =new LinkedList<String>();
     private static RequestConfig config = null;//创建请求配置对象
     private static List<String> userAgentList = null;//代理对象集合
+    public static Taskdemo tk=new Taskdemo();
 
     //静态代码块会在类进行加载的时候执行
     static HttpHost proxy = new HttpHost("127.0.0.1", 8080);
@@ -288,7 +289,6 @@ public class request {
          * 启动请求方法
          */
         public static void start(String url,String requmodes,String path) throws Exception {
-            request re=new request();
             //String path="src/main/resources/com/example/javafxdemo/spring.txt";
             pathpara(path);
             String para;
@@ -304,7 +304,6 @@ public class request {
                 }else{
                     postHttp(para,url);
                 }
-
             }
             Date endday = new Date();
             Date nextMonth = new Date(endday.getTime()+1000*3600*24*30L);

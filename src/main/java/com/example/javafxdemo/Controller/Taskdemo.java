@@ -4,9 +4,12 @@ import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.Dialog;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.control.TabPane;
+
+import java.util.LinkedList;
+import java.util.Queue;
+
+import static com.example.javafxdemo.Controller.request.myTM.start;
 
 
 public class Taskdemo extends Task <String>{
@@ -30,9 +33,13 @@ public class Taskdemo extends Task <String>{
 
     @Override
     protected String call() throws Exception {
-        for (int i=0;i<=100;i++){
-            Thread.sleep(100);
-            this.updateProgress(i,100);
+        request req =new request();
+        start("https://www.jb51.net/","Get","src/main/resources/com/example/javafxdemo/dictionary/spring.txt");
+        int max= req.queue.size();
+        System.out.println(max);
+        for (int i=0;i<=max;i++){
+            //Thread.sleep(500);
+            updateProgress(i,max);
             System.out.println(i);
         }
         return null;
@@ -41,10 +48,7 @@ public class Taskdemo extends Task <String>{
 
     }
     public void test() throws Exception {
-        //Taskdemo tk=new Taskdemo();
-        //Thread td=new Thread(tk);
-       // probox.progressProperty().bind(tk.progressProperty());
-        //new Thread(tk).start();
+        Taskdemo tk=new Taskdemo();
 
     }
 }

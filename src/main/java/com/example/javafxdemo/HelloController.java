@@ -2,7 +2,9 @@ package com.example.javafxdemo;
 
 import com.example.javafxdemo.Controller.Taskdemo;
 import com.example.javafxdemo.Controller.request;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -12,6 +14,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -71,6 +75,8 @@ public class HelloController {
 
     @FXML
     private ProgressBar probox;
+
+
 
 
     /**
@@ -282,8 +288,30 @@ public class HelloController {
     public void startpro(ActionEvent actionEvent) throws Exception {
         Taskdemo tk=new Taskdemo();
         Thread td=new Thread(tk);
+        ExecutorService executorService = Executors.newFixedThreadPool(5);
+        /**Task task = new Task<Void>() {
+            @Override
+            public Void call() {
+                for (int i = 1; i <= 100; i++) {
+                    if (isCancelled()) {
+                        break;
+                    }
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException interrupted) {
+                        if (isCancelled()) {
+                            break;
+                        }
+                    }
+                    updateProgress(i, 100);
+                }
+                return null;
+            }
+        };
+         **/
         probox.progressProperty().bind(tk.progressProperty());
-        new Thread(tk).start();
-
+        executorService.submit(tk);
+        //probox.progressProperty().bind(tk.progressProperty());
+        //new Thread(tk).start();
     }
 }
