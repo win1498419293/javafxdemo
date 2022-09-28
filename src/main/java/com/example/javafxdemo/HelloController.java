@@ -2,9 +2,6 @@ package com.example.javafxdemo;
 
 import com.example.javafxdemo.Controller.Taskdemo;
 import com.example.javafxdemo.Controller.request;
-import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -28,6 +25,7 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import org.omg.Messaging.SyncScopeHelper;
 
+import static com.example.javafxdemo.Controller.request.myTM.pathpara;
 import static com.example.javafxdemo.Controller.request.myTM.start;
 
 public class HelloController {
@@ -75,6 +73,9 @@ public class HelloController {
 
     @FXML
     private ProgressBar probox;
+
+    @FXML
+    private ProgressBar proboxone;
 
 
 
@@ -246,23 +247,26 @@ public class HelloController {
         String urls = url.getText();
         //获取请求方法
         String requmodes = (String) requmode.getValue();
+        //获得线程数
+        int threadnum = 5;
         request re = new request();
-        if (paths==""||urls.equals("")||threadbox.getText().equals("")){
+        if (urls.equals("")){
             urllabel.setTextFill(Color.web("#0ea30e"));
             urllabel.setFont(Font.font("Cambria", 15));
             urllabel.setText("请输入url");
             path = "src/main/resources/com/example/javafxdemo/dictionary/spring.txt";
         }else{
-            //获得线程数
-            int threadnum = 0;
+
             //判断输入的是否是数字及是否为空
-            if (threadbox.getText() != "") {
+            if (!threadbox.getText().equals("")) {
                 try{
                     threadnum = Integer.parseInt(threadbox.getText());
                     if (threadnum < '0' || threadnum > '9') ;
                 }catch (Exception e){
                     threadlabel.setText("请输入数字");
                 }
+            }else {
+                threadnum = 5;
             }
             path = "src/main/resources/com/example/javafxdemo/dictionary/"+paths;
             String regex = "((http|https)://)([\\w-]+\\.)+[\\w$]+";
@@ -271,13 +275,18 @@ public class HelloController {
             Matcher matcher = pattern.matcher(urls);
             if (matcher.find()){
                 System.out.println("满足格式！");
-                start(urls, requmodes, path);
-                re.StartThread(urls, threadnum, requmodes, path);
-                String para;
-                while ((para = re.msg.poll()) != null) {
-                    area.appendText(para + "\r\n");
-                    System.out.println(para);
-                }
+                pathpara(path);
+                //start(urls, requmodes, path);
+                //re.StartThread(urls, threadnum, requmodes, path);
+//                String para;
+//                while ((para = re.msg.poll()) != null) {
+//                    area.appendText(para + "\r\n");
+//                    System.out.println(para);
+//                }
+                Taskdemo tk=new Taskdemo();
+                ExecutorService executorService = Executors.newFixedThreadPool(threadnum);
+                proboxone.progressProperty().bind(tk.progressProperty());
+                executorService.submit(tk);
             }else {
                 System.out.println("不满足格式！");
                 urllabel.setText("请输入正确的url");

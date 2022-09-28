@@ -35,6 +35,7 @@ import javafx.fxml.FXML;
 import static com.example.javafxdemo.Controller.request.myTM.start;
 
 public class request {
+    public static int queuesize;
 
     @FXML
     public static TextArea area;
@@ -46,7 +47,7 @@ public class request {
     private Button search;
 
     @FXML
-    private ChoiceBox<Object> requmode;
+    public ChoiceBox<Object> requmode;
 
     @FXML
     private WebView webview;
@@ -55,19 +56,19 @@ public class request {
     private TextField threadbox;
 
     @FXML
-    private TextField para;
+    public TextField para;
 
     @FXML
     private Button threadbut;
 
     @FXML
-    private ComboBox<?> combox;
+    public ComboBox<?> combox;
 
     @FXML
     private TextArea text;
 
     @FXML
-    private TextField url;
+    public TextField url;
 
     @FXML
 
@@ -279,6 +280,7 @@ public class request {
                     //System.out.print(System.lineSeparator() + s);
                 }
                 br.close();
+                queuesize= queue.size();
             }catch(Exception e){
                 e.printStackTrace();
             }

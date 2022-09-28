@@ -5,11 +5,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.TextArea;
 
 import java.util.LinkedList;
 import java.util.Queue;
 
-import static com.example.javafxdemo.Controller.request.myTM.start;
+import static com.example.javafxdemo.Controller.request.myTM.*;
+import static com.example.javafxdemo.Controller.request.queuesize;
 
 
 public class Taskdemo extends Task <String>{
@@ -20,6 +22,9 @@ public class Taskdemo extends Task <String>{
 
     @FXML
     private ProgressBar probox;
+
+    @FXML
+    private TextArea area;
 
     @Override
     protected void updateValue(String value) {
@@ -34,13 +39,25 @@ public class Taskdemo extends Task <String>{
     @Override
     protected String call() throws Exception {
         request req =new request();
-        start("https://www.jb51.net/","Get","src/main/resources/com/example/javafxdemo/dictionary/spring.txt");
-        int max= req.queue.size();
+        String requmodes = (String) req.requmode.getValue();
+        //获取字典
+        String paths = (String) req.combox.getValue();
+        //获取url
+        String urls = req.url.getText();
+        int max= queuesize;
         System.out.println(max);
         for (int i=0;i<=max;i++){
             //Thread.sleep(500);
+            String para=req.queue.poll();
+            if(requmodes.equals("Get")){
+                getHttp(para,urls);
+            }else{
+                postHttp(para,urls);
+            }
+
             updateProgress(i,max);
-            System.out.println(i);
+            area.appendText(para + "\r\n");
+            System.out.println(req.msg.poll());
         }
         return null;
     }
