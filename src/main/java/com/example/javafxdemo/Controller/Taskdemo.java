@@ -1,17 +1,17 @@
 package com.example.javafxdemo.Controller;
 
+import com.example.javafxdemo.HelloController;
 import javafx.concurrent.Task;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextArea;
-
-import java.util.LinkedList;
-import java.util.Queue;
+import com.example.javafxdemo.entity.uiunit;
 
 import static com.example.javafxdemo.Controller.request.myTM.*;
 import static com.example.javafxdemo.Controller.request.queuesize;
+import static com.example.javafxdemo.HelloController.paths;
+import static com.example.javafxdemo.HelloController.urls;
 
 
 public class Taskdemo extends Task <String>{
@@ -23,8 +23,6 @@ public class Taskdemo extends Task <String>{
     @FXML
     private ProgressBar probox;
 
-    @FXML
-    private TextArea area;
 
     @Override
     protected void updateValue(String value) {
@@ -39,11 +37,13 @@ public class Taskdemo extends Task <String>{
     @Override
     protected String call() throws Exception {
         request req =new request();
-        String requmodes = (String) req.requmode.getValue();
+        HelloController hc=new HelloController();
+        uiunit ui=new uiunit();
+        String requmodes =HelloController.requmodes;
         //获取字典
-        String paths = (String) req.combox.getValue();
+        String paths =HelloController.paths;
         //获取url
-        String urls = req.url.getText();
+        String urls =HelloController.urls;
         int max= queuesize;
         System.out.println(max);
         for (int i=0;i<=max;i++){
@@ -54,9 +54,12 @@ public class Taskdemo extends Task <String>{
             }else{
                 postHttp(para,urls);
             }
+            String paras;
+            while ((paras = req.msg.poll()) != null) {
 
+                System.out.println(paras);
+            }
             updateProgress(i,max);
-            area.appendText(para + "\r\n");
             System.out.println(req.msg.poll());
         }
         return null;

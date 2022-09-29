@@ -2,10 +2,10 @@ package com.example.javafxdemo;
 
 import com.example.javafxdemo.Controller.Taskdemo;
 import com.example.javafxdemo.Controller.request;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
@@ -15,23 +15,23 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import com.example.javafxdemo.Controller.base64endode;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import org.omg.Messaging.SyncScopeHelper;
+import com.example.javafxdemo.entity.uiunit;
 
 import static com.example.javafxdemo.Controller.request.myTM.pathpara;
 import static com.example.javafxdemo.Controller.request.myTM.start;
 
 public class HelloController {
 
+
+
     @FXML
-    private TextArea area;
+    public TextArea area;
 
     @FXML
     private Button scanbut;
@@ -76,6 +76,12 @@ public class HelloController {
 
     @FXML
     private ProgressBar proboxone;
+
+    public static String paths ;
+
+    public static String urls ;
+    public static String requmodes ;
+
 
 
 
@@ -241,12 +247,13 @@ public class HelloController {
      */
     @FXML
     public void setthread(ActionEvent actionEvent) throws Exception, InvocationTargetException {
+
         //获取字典
-        String paths = combox.getValue();
+         paths = combox.getValue();
         //获取url
-        String urls = url.getText();
+        urls = url.getText();
         //获取请求方法
-        String requmodes = (String) requmode.getValue();
+         requmodes = (String) requmode.getValue();
         //获得线程数
         int threadnum = 5;
         request re = new request();
@@ -278,13 +285,19 @@ public class HelloController {
                 pathpara(path);
                 //start(urls, requmodes, path);
                 //re.StartThread(urls, threadnum, requmodes, path);
-//                String para;
-//                while ((para = re.msg.poll()) != null) {
-//                    area.appendText(para + "\r\n");
-//                    System.out.println(para);
-//                }
+                Task task = new Task<Void>() {
+                    @Override
+                    public Void call() {
+                        String para;
+                        while ((para = re.msg.poll()) != null) {
+                            area.appendText(para + "\r\n");
+                            System.out.println(para);
+                        }
+                        return null;
+                    }
+                };
                 Taskdemo tk=new Taskdemo();
-                ExecutorService executorService = Executors.newFixedThreadPool(threadnum);
+                ExecutorService executorService = Executors.newFixedThreadPool(5);
                 proboxone.progressProperty().bind(tk.progressProperty());
                 executorService.submit(tk);
             }else {
@@ -322,5 +335,8 @@ public class HelloController {
         executorService.submit(tk);
         //probox.progressProperty().bind(tk.progressProperty());
         //new Thread(tk).start();
+    }
+    public  String showmsg(String msg){
+        return msg;
     }
 }
