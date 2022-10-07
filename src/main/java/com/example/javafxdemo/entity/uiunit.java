@@ -1,235 +1,152 @@
 package com.example.javafxdemo.entity;
 
-import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.web.WebView;
 
 public class uiunit {
+
     private TextArea area;
 
-    @FXML
     private Button scanbut;
 
-    @FXML
     private Button search;
 
-    @FXML
     private ChoiceBox<?> requmode;
 
-    @FXML
-    private WebView webview;
-
-    @FXML
     private TextField threadbox;
 
-    @FXML
     private TextField para;
 
-    @FXML
     private Button threadbut;
 
-
-    @FXML
     public ComboBox<String> combox;
 
-    @FXML
     private TextArea text;
 
-    @FXML
     private TextField url;
 
-    @FXML
     private Label threadlabel;
 
-    @FXML
     private Label urllabel;
 
     public String path;
 
-    @FXML
     private ProgressBar probox;
 
-    @FXML
     private ProgressBar proboxone;
-    private String paths ;
 
-    private String urls ;
-    private String requmodes ;
+    public  String paths ;
 
-    public uiunit() {
+    public  String urls ;
+
+    public  String requmodes;
+    public  uiunit(){
+
     }
-
-    public TextArea getArea() {
+    public  uiunit(String paths,String urls,String requmodes){
+        this.paths=paths;
+        this.urls=urls;
+        this.requmodes=requmodes;
+    }
+    public TextArea getarea (){
         return area;
     }
-
-    public uiunit(TextArea area, Button scanbut, Button search, ChoiceBox<?> requmode, WebView webview, TextField threadbox, TextField para, Button threadbut, ComboBox<String> combox, TextArea text, TextField url, Label threadlabel, Label urllabel, String path, ProgressBar probox, ProgressBar proboxone, String paths, String urls, String requmodes) {
-        this.area = area;
-        this.scanbut = scanbut;
-        this.search = search;
-        this.requmode = requmode;
-        this.webview = webview;
-        this.threadbox = threadbox;
-        this.para = para;
-        this.threadbut = threadbut;
-        this.combox = combox;
-        this.text = text;
-        this.url = url;
-        this.threadlabel = threadlabel;
-        this.urllabel = urllabel;
-        this.path = path;
-        this.probox = probox;
-        this.proboxone = proboxone;
-        this.paths = paths;
-        this.urls = urls;
-        this.requmodes = requmodes;
+    public void setarea (TextArea area){
+        this.area=area;
     }
-
-    public void setArea(TextArea area) {
-        this.area = area;
-    }
-
-    public Button getScanbut() {
+    public Button getscanbut (){
         return scanbut;
     }
-
-    public void setScanbut(Button scanbut) {
-        this.scanbut = scanbut;
+    public void setscanbut (Button scanbut){
+        this.scanbut=scanbut;
     }
-
-    public Button getSearch() {
+    public Button getsearch (){
         return search;
     }
-
-    public void setSearch(Button search) {
-        this.search = search;
+    public void setsearch (Button search){
+        this.search=search;
     }
-
-    public ChoiceBox<?> getRequmode() {
+    public ChoiceBox<?> getrequmode (){
         return requmode;
     }
-
-    public void setRequmode(ChoiceBox<?> requmode) {
-        this.requmode = requmode;
+    public void setcombox (ChoiceBox<?> requmode){
+        this.requmode=requmode;
     }
-
-    public WebView getWebview() {
-        return webview;
-    }
-
-    public void setWebview(WebView webview) {
-        this.webview = webview;
-    }
-
-    public TextField getThreadbox() {
+    public TextField getthreadbox (){
         return threadbox;
     }
-
-    public void setThreadbox(TextField threadbox) {
-        this.threadbox = threadbox;
+    public void setthreadbox (TextField threadbox){
+        this.threadbox=threadbox;
     }
-
-    public TextField getPara() {
-        return para;
+    public TextField getpara (){
+        return threadbox;
     }
-
-    public void setPara(TextField para) {
-        this.para = para;
+    public void setpara(TextField para){
+        this.para=para;
     }
-
-    public Button getThreadbut() {
+    public Button getthreadbut (){
         return threadbut;
     }
-
-    public void setThreadbut(Button threadbut) {
-        this.threadbut = threadbut;
+    public void setthreadbut (Button threadbut){
+        this.threadbut=threadbut;
     }
-
-    public ComboBox<String> getCombox() {
+    public ComboBox<String> getcombox (){
         return combox;
     }
-
-    public void setCombox(ComboBox<String> combox) {
-        this.combox = combox;
+    public void setthreadbut (ComboBox<String> combox){
+        this.combox=combox;
     }
-
-    public TextArea getText() {
+    public TextArea gettext (){
         return text;
     }
-
-    public void setText(TextArea text) {
-        this.text = text;
+    public void settext (TextArea text){
+        this.text=text;
     }
-
-    public TextField getUrl() {
+    public TextField geturl (){
         return url;
     }
-
-    public void setUrl(TextField url) {
-        this.url = url;
+    public void settext (TextField url){
+        this.url=url;
     }
-
-    public Label getThreadlabel() {
+    public Label getthreadlabel (){
         return threadlabel;
     }
-
-    public void setThreadlabel(Label threadlabel) {
-        this.threadlabel = threadlabel;
+    public void setthreadlabel (Label url){
+        this.threadlabel=threadlabel;
     }
-
-    public Label getUrllabel() {
+    public Label geturllabel (){
         return urllabel;
     }
-
-    public void setUrllabel(Label urllabel) {
-        this.urllabel = urllabel;
+    public void seturllabel (Label urllabel){
+        this.urllabel=urllabel;
     }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public ProgressBar getProbox() {
+    public ProgressBar getprobox (){
         return probox;
     }
-
-    public void setProbox(ProgressBar probox) {
-        this.probox = probox;
+    public void setprobox (ProgressBar probox){
+        this.probox=probox;
     }
-
-    public ProgressBar getProboxone() {
+    public ProgressBar getproboxone (){
         return proboxone;
     }
-
-    public void setProboxone(ProgressBar proboxone) {
-        this.proboxone = proboxone;
+    public void setproboxone (ProgressBar proboxone){
+        this.proboxone=proboxone;
     }
-
-    public String getPaths() {
+    public String getpaths (){
         return paths;
     }
-
-    public void setPaths(String paths) {
-        this.paths = paths;
+    public void setpaths (String paths){
+        this.paths=paths;
     }
-
-    public String getUrls() {
+    public String geturls (){
         return urls;
     }
-
-    public void setUrls(String urls) {
-        this.urls = urls;
+    public void seturls (String urls){
+        this.urls=urls;
     }
-
-    public String getRequmodes() {
+    public String getrequmodes (){
         return requmodes;
     }
-
-    public void setRequmodes(String requmodes) {
-        this.requmodes = requmodes;
+    public void setrequmodes (String requmodes){
+        this.requmodes=requmodes;
     }
 }

@@ -35,7 +35,8 @@ import javafx.fxml.FXML;
 import static com.example.javafxdemo.Controller.request.myTM.start;
 
 public class request {
-    public static int queuesize;
+
+
 
     @FXML
     public static TextArea area;
@@ -47,7 +48,7 @@ public class request {
     private Button search;
 
     @FXML
-    public ChoiceBox<Object> requmode;
+    private ChoiceBox<Object> requmode;
 
     @FXML
     private WebView webview;
@@ -56,21 +57,23 @@ public class request {
     private TextField threadbox;
 
     @FXML
-    public TextField para;
+    private TextField para;
 
     @FXML
     private Button threadbut;
 
     @FXML
-    public ComboBox<?> combox;
+    private ComboBox<?> combox;
 
     @FXML
     private TextArea text;
 
     @FXML
-    public TextField url;
+    private TextField url;
 
     @FXML
+
+
 
     public  static Queue<String> queue =new LinkedList<String>();
     public  static Queue<String> msg =new LinkedList<String>();
@@ -139,6 +142,7 @@ public class request {
 
 
     public static class myTM implements TrustManager, X509TrustManager {
+        public static int queuesize;
 
         public X509Certificate[] getAcceptedIssuers() {
             return null;
@@ -279,8 +283,8 @@ public class request {
                     queue.offer(s);
                     //System.out.print(System.lineSeparator() + s);
                 }
+                queuesize=queue.size();
                 br.close();
-                queuesize= queue.size();
             }catch(Exception e){
                 e.printStackTrace();
             }
@@ -292,6 +296,7 @@ public class request {
          */
         public static void start(String url,String requmodes,String path) throws Exception {
             //String path="src/main/resources/com/example/javafxdemo/spring.txt";
+            Taskdemo tk=new Taskdemo();
             pathpara(path);
             String para;
             Date today = new Date();

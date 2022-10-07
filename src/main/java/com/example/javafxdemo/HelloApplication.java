@@ -3,6 +3,7 @@ package com.example.javafxdemo;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -16,6 +17,7 @@ import javafx.stage.Stage;
 import javafx.scene.web.WebEngine;
 import java.io.IOException;
 import javafx.scene.web.WebView;
+import javafx.stage.WindowEvent;
 
 
 public class HelloApplication extends Application {
@@ -38,6 +40,13 @@ public class HelloApplication extends Application {
         stage.setTitle("Fofasearch");
         stage.setScene(scene);
         stage.show();
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                System.exit(0);
+            }
+        });
+
     }
 
     public static void main(String[] args) {

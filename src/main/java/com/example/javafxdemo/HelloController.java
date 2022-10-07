@@ -2,17 +2,19 @@ package com.example.javafxdemo;
 
 import com.example.javafxdemo.Controller.Taskdemo;
 import com.example.javafxdemo.Controller.request;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
+import java.net.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import com.example.javafxdemo.Controller.base64endode;
@@ -23,24 +25,12 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import com.example.javafxdemo.entity.uiunit;
 
-import static com.example.javafxdemo.Controller.request.myTM.pathpara;
-import static com.example.javafxdemo.Controller.request.myTM.start;
+import static com.example.javafxdemo.Controller.request.myTM.*;
 
 public class HelloController {
 
-
-
     @FXML
-    public TextArea area;
-
-    @FXML
-    private Button scanbut;
-
-    @FXML
-    private Button search;
-
-    @FXML
-    private ChoiceBox<?> requmode;
+    private TextArea area;
 
     @FXML
     private WebView webview;
@@ -48,43 +38,74 @@ public class HelloController {
     @FXML
     private TextField threadbox;
 
-    @FXML
-    private TextField para;
+
 
     @FXML
-    private Button threadbut;
+    private ProgressBar probox;
+
 
     @FXML
-    public ComboBox<String> combox;
+    private ChoiceBox<String> requmode;
 
-    @FXML
-    private TextArea text;
-
-    @FXML
-    private TextField url;
 
     @FXML
     private Label threadlabel;
 
     @FXML
-    private Label urllabel;
-
-    public String path;
-
-    @FXML
-    private ProgressBar probox;
+    private TextField url;
 
     @FXML
     private ProgressBar proboxone;
 
-    public static String paths ;
+    @FXML
+    private Button search;
+
+    @FXML
+    private TextField para;
+
+    @FXML
+    private ComboBox<String> combox;
+
+    @FXML
+    private Button threadbut;
+
+    @FXML
+    private TextArea showarea;
+
+    @FXML
+    private TextArea text;
+
+    @FXML
+    private Label urllabel;
+
+    @FXML
+    private TextField endport;
+
+    @FXML
+    private TextField threadnum;
+
+    @FXML
+    private Button scanbut;
+
+    @FXML
+    private Button startbut;
+
+    @FXML
+    private Button portscan;
+
+    @FXML
+    private TextField staport;
+
+    @FXML
+    private TextField ip;
+
+    private String path;
+
+    public static String paths;
 
     public static String urls ;
-    public static String requmodes ;
 
-
-
-
+    public static String  requmodes;
 
     /**
      * 在加载布景前加载的方法，将字典填充到combox
@@ -155,6 +176,7 @@ public class HelloController {
             //正则匹配url是否为正确url
             if (matcher.find()){
                 System.out.println("满足格式！");
+
                 start(urls, requmodes, path);
                 String para;
                 while ((para = re.msg.poll()) != null) {
@@ -247,21 +269,20 @@ public class HelloController {
      */
     @FXML
     public void setthread(ActionEvent actionEvent) throws Exception, InvocationTargetException {
-
         //获取字典
          paths = combox.getValue();
         //获取url
-        urls = url.getText();
+         urls = url.getText();
         //获取请求方法
-         requmodes = (String) requmode.getValue();
+        requmodes = (String) requmode.getValue();
+        uiunit ui=new uiunit(paths,urls,requmodes);
+        request re = new request();
         //获得线程数
         int threadnum = 5;
-        request re = new request();
         if (urls.equals("")){
             urllabel.setTextFill(Color.web("#0ea30e"));
             urllabel.setFont(Font.font("Cambria", 15));
             urllabel.setText("请输入url");
-            path = "src/main/resources/com/example/javafxdemo/dictionary/spring.txt";
         }else{
 
             //判断输入的是否是数字及是否为空
@@ -272,32 +293,61 @@ public class HelloController {
                 }catch (Exception e){
                     threadlabel.setText("请输入数字");
                 }
-            }else {
-                threadnum = 5;
             }
             path = "src/main/resources/com/example/javafxdemo/dictionary/"+paths;
-            String regex = "((http|https)://)([\\w-]+\\.)+[\\w$]+";
-            String regStr = "^((http|https)://)([\\w-]+\\.)+[\\w$]+(\\/[\\w-?=&./]*)?$";//[.?*]表示匹配的就是本身
+            String regex = "((http|https)://)([\\w-]+\\.)+[\\w$]+";//[.?*]表示匹配的就是本身
             Pattern pattern = Pattern.compile(regex);
             Matcher matcher = pattern.matcher(urls);
             if (matcher.find()){
                 System.out.println("满足格式！");
-                pathpara(path);
                 //start(urls, requmodes, path);
                 //re.StartThread(urls, threadnum, requmodes, path);
-                Task task = new Task<Void>() {
+                /*Taskdemo tk=new Taskdemo();
+                ExecutorService executorService = Executors.newFixedThreadPool(threadnum);
+                proboxone.progressProperty().bind(tk.progressProperty());
+                executorService.submit(tk);
+                tk.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
                     @Override
-                    public Void call() {
-                        String para;
-                        while ((para = re.msg.poll()) != null) {
-                            area.appendText(para + "\r\n");
+                    public void handle(WorkerStateEvent t) {
+                        //获取Task返回的值
+                        System.out.println("done! Get Return Value :" + t.getSource().getValue());
+                    }
+                });*/
+                Task tk = new Task<Void>() {
+                    @Override public Void call() throws Exception {
+                        pathpara(path);
+                        final int max = queuesize;
+                        request req =new request();
+                        for (int i=1;i<=max;i++){
+                            String para=req.queue.poll();
                             System.out.println(para);
+                            if(requmodes.equals("Get")){
+                                try {
+                                    getHttp(para,urls);
+                                }catch(Exception e){
+                                    System.exit(0);
+                                }
+                            }else{
+                                try {
+                                    postHttp(para,urls);
+                                }catch(Exception e){
+                                    System.exit(0);
+                                }
+                            }
+                            //Thread.sleep(500);
+                            updateProgress(i,max);
+                            String paras;
+                            while((paras=req.msg.poll())!=null) {
+                                String finalParas = paras;
+                                Platform.runLater(() -> {
+                                    area.appendText(finalParas + "\r\n");
+                                });
+                            }
                         }
                         return null;
                     }
                 };
-                Taskdemo tk=new Taskdemo();
-                ExecutorService executorService = Executors.newFixedThreadPool(5);
+                ExecutorService executorService = Executors.newFixedThreadPool(threadnum);
                 proboxone.progressProperty().bind(tk.progressProperty());
                 executorService.submit(tk);
             }else {
@@ -308,9 +358,11 @@ public class HelloController {
         }
 
     public void startpro(ActionEvent actionEvent) throws Exception {
+        int threadnum=Integer.parseInt(threadbox.getText());
+
         Taskdemo tk=new Taskdemo();
         Thread td=new Thread(tk);
-        ExecutorService executorService = Executors.newFixedThreadPool(5);
+        ExecutorService executorService = Executors.newFixedThreadPool(threadnum);
         /**Task task = new Task<Void>() {
             @Override
             public Void call() {
@@ -331,12 +383,51 @@ public class HelloController {
             }
         };
          **/
-        probox.progressProperty().bind(tk.progressProperty());
-        executorService.submit(tk);
         //probox.progressProperty().bind(tk.progressProperty());
+        //executorService.submit(tk);
+        proboxone.progressProperty().bind(tk.progressProperty());
+        executorService.submit(tk);
         //new Thread(tk).start();
     }
-    public  String showmsg(String msg){
-        return msg;
+
+
+    public void startportscan(ActionEvent actionEvent) {
+            String ips=ip.getText();
+            int staports=staport.getText().equals("")?1:Integer.parseInt(staport.getText());
+            int endports=endport.getText().equals("")?65535:Integer.parseInt(endport.getText());;
+            int threadnums=threadnum.getText().equals("")?10:Integer.parseInt(threadnum.getText());
+            String regex = "^(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|[1-9])\\.(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\.(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\.(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)$";
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(ips);
+        Socket sk =new Socket();
+            if (matcher.find()) {
+                Task tk = new Task<Void>() {
+                    @Override public Void call() throws Exception {
+                        final int max =endports ;
+                        for (int i=staports;i<=max;i++){
+                            //Thread.sleep(500);
+                            System.out.println("ip:"+ips+" "+i);
+                            try {
+                                sk.connect(new InetSocketAddress(ips, i));
+                                System.out.println("端口" + i + "开放");
+                                //updateProgress(i,max);
+                                int finalI = i;
+                                Platform.runLater(() -> {
+                                    showarea.appendText( "端口" + finalI + "开放"+ "\r\n");
+                                });
+                            } catch (Exception e) {
+                                int finalI = i;
+                                 //e.printStackTrace();
+                                 System.out.println("端口" + finalI + "未开放");
+                            }
+
+                        }
+                        return null;
+                    }
+                };
+                ExecutorService executorService = Executors.newFixedThreadPool(threadnums);
+                executorService.submit(tk);
+            }
+
     }
 }

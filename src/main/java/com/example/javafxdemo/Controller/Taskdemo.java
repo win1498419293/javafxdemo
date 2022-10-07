@@ -2,26 +2,17 @@ package com.example.javafxdemo.Controller;
 
 import com.example.javafxdemo.HelloController;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import com.example.javafxdemo.entity.uiunit;
 
+
 import static com.example.javafxdemo.Controller.request.myTM.*;
-import static com.example.javafxdemo.Controller.request.queuesize;
-import static com.example.javafxdemo.HelloController.paths;
-import static com.example.javafxdemo.HelloController.urls;
 
 
 public class Taskdemo extends Task <String>{
 
-
-    @FXML
-    private Button scanbut;
-
-    @FXML
-    private ProgressBar probox;
 
 
     @Override
@@ -38,31 +29,30 @@ public class Taskdemo extends Task <String>{
     protected String call() throws Exception {
         request req =new request();
         HelloController hc=new HelloController();
-        uiunit ui=new uiunit();
-        String requmodes =HelloController.requmodes;
-        //获取字典
-        String paths =HelloController.paths;
         //获取url
-        String urls =HelloController.urls;
+        String urls = hc.urls;
+        //获取字典
+        String paths = hc.paths;
+        System.out.println(paths);
+        //获取请求方法
+        String requmodes = hc.requmodes;
+        //String value = (String) requmode.getValue();
+        //System.out.println(value);
+        pathpara("src/main/resources/com/example/javafxdemo/dictionary/"+paths);
         int max= queuesize;
-        System.out.println(max);
-        for (int i=0;i<=max;i++){
-            //Thread.sleep(500);
+        for (int i=1;i<=max;i++){
             String para=req.queue.poll();
+            System.out.println(para);
             if(requmodes.equals("Get")){
                 getHttp(para,urls);
             }else{
                 postHttp(para,urls);
             }
-            String paras;
-            while ((paras = req.msg.poll()) != null) {
-
-                System.out.println(paras);
-            }
+            //Thread.sleep(500);
             updateProgress(i,max);
-            System.out.println(req.msg.poll());
+            System.out.println(i);
         }
-        return null;
+        return req.msg.poll();
     }
     public void initialize(){
 

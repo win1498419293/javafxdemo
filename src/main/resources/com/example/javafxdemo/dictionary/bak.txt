@@ -5,6 +5,7 @@
 1.sql
 1.bak
 1.z
+
 x.rar
 x.zip
 x.7z
@@ -12,6 +13,7 @@ x.tar.gz
 x.sql
 x.bak
 x.z
+
 db.rar
 db.zip
 db.7z
@@ -115,6 +117,7 @@ server.tar.gz
 server.sql
 server.bak
 server.z
+
 databak.rar
 databak.zip
 databak.7z
@@ -122,6 +125,7 @@ databak.tar.gz
 databak.sql
 databak.bak
 databak.z
+
 wwwroot.rar
 wwwroot.zip
 wwwroot.7z
@@ -129,6 +133,7 @@ wwwroot.tar.gz
 wwwroot.sql
 wwwroot.bak
 wwwroot.z
+
 webroot.rar
 webroot.zip
 webroot.7z
@@ -136,6 +141,7 @@ webroot.tar.gz
 webroot.sql
 webroot.bak
 webroot.z
+
 website.rar
 website.zip
 website.7z
@@ -143,6 +149,7 @@ website.tar.gz
 website.sql
 website.bak
 website.z
+
 databack.rar
 databack.zip
 databack.7z
@@ -150,6 +157,7 @@ databack.tar.gz
 databack.sql
 databack.bak
 databack.z
+
 databackup.rar
 databackup.zip
 databackup.7z
