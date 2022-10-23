@@ -44,6 +44,11 @@
             <artifactId>javafxdemo</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-http</artifactId>
+            <version>5.4.7</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -78,5 +83,22 @@
                 </executions>
             </plugin>
         </plugins>
+        <resources>
+            <!--两个resource节点都加上吧，如果你两个目录下都有配置文件的话。只加一个resource节点，只会编译这个节点配置的目录下的xml,properties文件-->
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.fxml</include>
+                    <include>**/*.properties</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.fxml</include>
+                    <include>**/*.properties</include>
+                </includes>
+            </resource>
+        </resources>
     </build>
 </project>

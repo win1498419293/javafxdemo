@@ -3,18 +3,16 @@ package com.example.javafxdemo;
 import com.example.javafxdemo.Controller.Taskdemo;
 import com.example.javafxdemo.Controller.request;
 import javafx.application.Platform;
-import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.net.*;
+import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import com.example.javafxdemo.Controller.base64endode;
@@ -24,6 +22,7 @@ import javafx.scene.text.Font;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import com.example.javafxdemo.entity.uiunit;
+import com.example.javafxdemo.Check.checks;
 
 import static com.example.javafxdemo.Controller.request.myTM.*;
 
@@ -52,6 +51,9 @@ public class HelloController {
     private Label threadlabel;
 
     @FXML
+    private Label proboxlab;
+
+    @FXML
     private TextField url;
 
     @FXML
@@ -67,7 +69,13 @@ public class HelloController {
     private ComboBox<String> combox;
 
     @FXML
-    private Button threadbut;
+    private TextField targetField;
+    @FXML
+    public ChoiceBox<String> setEncodeField;
+    @FXML
+    public ChoiceBox<String> s2_allField;
+    @FXML
+    public ChoiceBox<String> methodField;
 
     @FXML
     private TextArea showarea;
@@ -90,14 +98,22 @@ public class HelloController {
     @FXML
     private Button startbut;
 
+
     @FXML
-    private Button portscan;
+    private ComboBox<String> vulcombox;
+
 
     @FXML
     private TextField staport;
 
     @FXML
     private TextField ip;
+
+    @FXML
+    private TextField vulurl;
+
+    @FXML
+    private Button urlscanbut;
 
     private String path;
 
@@ -106,12 +122,16 @@ public class HelloController {
     public static String urls ;
 
     public static String  requmodes;
+    public  Thread tk;
+
+    public  Thread td;
+    static AtomicInteger portCount=new AtomicInteger(0);
+    public static HashMap<String,String> helloinfo=new HashMap<>();
 
     /**
      * 在加载布景前加载的方法，将字典填充到combox
      * */
     public void initialize () {
-
         String path = "src/main/resources/com/example/javafxdemo/dictionary/";
         File f = new File(path);
         if (!f.exists()) {
@@ -124,6 +144,18 @@ public class HelloController {
             combox.getItems().add(fs.getName());
         }
         combox.getSelectionModel().select(0);
+        vulcombox.getItems().add("S2-001");
+        vulcombox.getSelectionModel().select(0);
+        setEncodeField.setValue("UTF-8");
+        setEncodeField.getItems().addAll("UTF-8", "GBK2312", "GBK");
+        methodField.setValue("POST");
+        methodField.getItems().addAll("POST", "GET", "UPLOAD");
+        s2_allField.setValue("S2-ALL");
+        s2_allField.getItems().addAll("S2-ALL",
+                "S2-001", "S2-005", "S2-007", "S2-008",
+                "S2-009", "S2-012", "S2-013", "S2-015", "S2-016", "S2-019",
+                "S2-Dev", "S2-032", "S2-037", "S2-045", "S2-046"
+        );
     }
 
 
@@ -269,6 +301,12 @@ public class HelloController {
      */
     @FXML
     public void setthread(ActionEvent actionEvent) throws Exception, InvocationTargetException {
+
+        area.setText("");
+        //重复运行时清空进度条
+        proboxone.setProgress(0);
+        portCount.set(0);
+        proboxlab.setText("");
         //获取字典
          paths = combox.getValue();
         //获取url
@@ -278,13 +316,13 @@ public class HelloController {
         uiunit ui=new uiunit(paths,urls,requmodes);
         request re = new request();
         //获得线程数
-        int threadnum = 5;
+        int threadnum=5;
+        int threadboxs=threadbox.getText().equals("")?1:Integer.parseInt(threadbox.getText());
         if (urls.equals("")){
             urllabel.setTextFill(Color.web("#0ea30e"));
             urllabel.setFont(Font.font("Cambria", 15));
             urllabel.setText("请输入url");
         }else{
-
             //判断输入的是否是数字及是否为空
             if (!threadbox.getText().equals("")) {
                 try{
@@ -300,20 +338,62 @@ public class HelloController {
             Matcher matcher = pattern.matcher(urls);
             if (matcher.find()){
                 System.out.println("满足格式！");
-                //start(urls, requmodes, path);
-                //re.StartThread(urls, threadnum, requmodes, path);
-                /*Taskdemo tk=new Taskdemo();
-                ExecutorService executorService = Executors.newFixedThreadPool(threadnum);
-                proboxone.progressProperty().bind(tk.progressProperty());
-                executorService.submit(tk);
-                tk.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-                    @Override
-                    public void handle(WorkerStateEvent t) {
-                        //获取Task返回的值
-                        System.out.println("done! Get Return Value :" + t.getSource().getValue());
-                    }
-                });*/
-                Task tk = new Task<Void>() {
+                try {
+                    pathpara(path);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                int finalI = 0;
+                int max = 0;
+                max = queuesize;
+                request req = new request();
+                int finalMax = max;
+                td =new Thread(() -> {
+                        for (int j = 0; j < threadboxs; j++) {
+                            if (td.isInterrupted()) {
+                                td.interrupted();
+                            }
+                            int finalJ = j;
+
+                            for (int i = 1; i <= finalMax; i = i + threadboxs) {
+                                String para = req.queue.poll();
+                                int finalI1 = i;
+                                System.out.println(para);
+                                if (requmodes.equals("Get")) {
+                                    try {
+                                        getHttp(para, urls);
+                                    } catch (Exception e) {
+                                        System.exit(0);
+                                    }
+                                } else {
+                                    try {
+                                        postHttp(para, urls);
+                                    } catch (Exception e) {
+                                        System.exit(0);
+                                    }
+                                }
+                                proboxone.setProgress((portCount.doubleValue()) / (finalMax-finalI));
+                                Platform.runLater(() -> {
+                                    proboxlab.setText((""+ Integer.valueOf((int) ((portCount.doubleValue())/(finalMax- finalI)*100))+"%"));//进度比
+                                });
+
+                                String paras;
+                                while ((paras = req.msg.poll()) != null) {
+                                    String finalParas = paras;
+                                    Platform.runLater(() -> {
+                                        area.appendText(finalParas + "\r\n");
+                                    });
+                                }
+                                portCount.incrementAndGet();
+                            }
+                            if (portCount.get() == (finalMax-finalI+1)) {//判断扫描结束
+                                portCount.incrementAndGet();
+                            }
+                        }
+
+                    });
+                td.start();
+                /*Task tk = new Task<Void>() {
                     @Override public Void call() throws Exception {
                         pathpara(path);
                         final int max = queuesize;
@@ -349,7 +429,8 @@ public class HelloController {
                 };
                 ExecutorService executorService = Executors.newFixedThreadPool(threadnum);
                 proboxone.progressProperty().bind(tk.progressProperty());
-                executorService.submit(tk);
+                executorService.submit(tk);*/
+
             }else {
                 System.out.println("不满足格式！");
                 urllabel.setText("请输入正确的url");
@@ -359,7 +440,6 @@ public class HelloController {
 
     public void startpro(ActionEvent actionEvent) throws Exception {
         int threadnum=Integer.parseInt(threadbox.getText());
-
         Taskdemo tk=new Taskdemo();
         Thread td=new Thread(tk);
         ExecutorService executorService = Executors.newFixedThreadPool(threadnum);
@@ -395,39 +475,61 @@ public class HelloController {
             String ips=ip.getText();
             int staports=staport.getText().equals("")?1:Integer.parseInt(staport.getText());
             int endports=endport.getText().equals("")?65535:Integer.parseInt(endport.getText());;
-            int threadnums=threadnum.getText().equals("")?10:Integer.parseInt(threadnum.getText());
+            int threadnums=threadnum.getText().equals("")?1:Integer.parseInt(threadnum.getText());
             String regex = "^(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|[1-9])\\.(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\.(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\.(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)$";
             Pattern pattern = Pattern.compile(regex);
             Matcher matcher = pattern.matcher(ips);
-        Socket sk =new Socket();
             if (matcher.find()) {
-                Task tk = new Task<Void>() {
-                    @Override public Void call() throws Exception {
-                        final int max =endports ;
-                        for (int i=staports;i<=max;i++){
-                            //Thread.sleep(500);
-                            System.out.println("ip:"+ips+" "+i);
-                            try {
-                                sk.connect(new InetSocketAddress(ips, i));
-                                System.out.println("端口" + i + "开放");
-                                //updateProgress(i,max);
-                                int finalI = i;
-                                Platform.runLater(() -> {
-                                    showarea.appendText( "端口" + finalI + "开放"+ "\r\n");
-                                });
-                            } catch (Exception e) {
-                                int finalI = i;
+                for (int j=0;j<threadnums;j++) {
+                    int finalJ = j;
+                      //tk=new Thread(new PrintThread(ips,j,staports,endports));
+                       tk =new Thread(() -> {
+                         for (int i = staports+ finalJ; i < endports+1; i=i+threadnums) {
+                             if (tk.isInterrupted()){
+                                 tk.interrupted();
+                                 break;
+                             }
+                             // 注意，这里不属于swing主线程，所以appendText的内容才会被刷新
+                             System.out.println("ip:" + ips + " " + i);
+                             try {
+                                 Socket sk = new Socket();
+                                 sk.connect(new InetSocketAddress(ips, i), 500);
+                                 System.out.println("端口" + i + "开放");
+                                 //updateProgress(i,max);
+                                 int finalI = i;
+                                 Platform.runLater(() -> {
+                                     showarea.appendText("端口" + finalI + "开放"+"\r\n");
+                                 });
+                             } catch (Exception e) {
+                                 int finalI = i;
                                  //e.printStackTrace();
                                  System.out.println("端口" + finalI + "未开放");
-                            }
+                             }
+                             portCount.incrementAndGet();
+                         }
+                         if (portCount.get()==(endports-staports+1)){//判断扫描结束
+                             portCount.incrementAndGet();
+                         }
+                     });
+                     tk.start();
+                }
 
-                        }
-                        return null;
-                    }
-                };
-                ExecutorService executorService = Executors.newFixedThreadPool(threadnums);
-                executorService.submit(tk);
             }
 
+    }
+
+    public void startvulscan(ActionEvent actionEvent) {
+        String vulurls=vulurl.getText();
+        String vulcomboxs=vulcombox.getValue();
+        String setEncodeFields=setEncodeField.getValue();
+        String methodFields=methodField.getValue();
+        String s2_allFields=s2_allField.getValue();
+        helloinfo.put("vulurls",vulurls);
+        helloinfo.put("vulcomboxs",vulcomboxs);
+        helloinfo.put("setEncodeFields",setEncodeFields);
+        helloinfo.put("methodFields",methodFields);
+        helloinfo.put("s2_allFields",s2_allFields);
+        checks cs=new checks();
+        cs.struts2046(vulurls);
     }
 }
