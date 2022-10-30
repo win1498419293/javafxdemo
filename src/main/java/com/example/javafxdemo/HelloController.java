@@ -1,5 +1,7 @@
 package com.example.javafxdemo;
 
+import com.example.javafxdemo.Check.Exp;
+import com.example.javafxdemo.Check.Poc;
 import com.example.javafxdemo.Controller.Taskdemo;
 import com.example.javafxdemo.Controller.request;
 import javafx.application.Platform;
@@ -22,7 +24,6 @@ import javafx.scene.text.Font;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import com.example.javafxdemo.entity.uiunit;
-import com.example.javafxdemo.Check.checks;
 
 import static com.example.javafxdemo.Controller.request.myTM.*;
 
@@ -529,7 +530,9 @@ public class HelloController {
         helloinfo.put("setEncodeFields",setEncodeFields);
         helloinfo.put("methodFields",methodFields);
         helloinfo.put("s2_allFields",s2_allFields);
-        checks cs=new checks();
-        cs.struts2046(vulurls);
+        Poc.checks cs=new Poc.checks();
+        Exp exp=new Exp();
+        exp.s2046(vulurls);
+        //cs.struts2046(vulurls);
     }
 }
