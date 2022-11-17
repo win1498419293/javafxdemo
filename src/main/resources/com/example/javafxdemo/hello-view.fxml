@@ -7,11 +7,11 @@
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.web.*?>
 
-<TabPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="600.0" prefWidth="1000.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.javafxdemo.HelloController">
+<TabPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="719.0" prefWidth="1000.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.javafxdemo.HelloController">
   <tabs>
     <Tab fx:id="dirscan" text="目录扫描">
       <content>
-          <AnchorPane fx:id="dispaly" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="380.0" prefWidth="400.0">
+          <AnchorPane fx:id="dispaly" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="500.0">
               <children>
                   <AnchorPane layoutX="436.0" layoutY="49.0">
                      <children>
@@ -23,10 +23,10 @@
                      </children>
                   </AnchorPane>
                   <TextField fx:id="url" layoutX="29.0" layoutY="49.0" prefHeight="23.0" prefWidth="149.0" />
-                  <Button fx:id="scanbut" layoutX="188.0" layoutY="49.0" mnemonicParsing="false" onAction="#stratscan" text="开始" />
+                  <Button fx:id="scanbut" layoutX="177.0" layoutY="49.0" mnemonicParsing="false" onAction="#stratscan" prefHeight="23.0" prefWidth="44.0" text="开始" />
                   <TextArea fx:id="area" layoutX="33.0" layoutY="109.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="319.0" prefWidth="601.0" />
-                  <TextField fx:id="threadbox" layoutX="317.0" layoutY="49.0" prefHeight="23.0" prefWidth="39.0" promptText="线程" />
-                  <Button fx:id="threadbut" layoutX="379.0" layoutY="49.0" mnemonicParsing="false" onAction="#setthread" prefHeight="23.0" prefWidth="41.0" text="确定" />
+                  <TextField fx:id="threadbox" layoutX="317.0" layoutY="49.0" prefHeight="23.0" prefWidth="60.0" promptText="线程" />
+                  <Button fx:id="threadbut" layoutX="374.0" layoutY="49.0" mnemonicParsing="false" onAction="#setthread" prefHeight="23.0" prefWidth="47.0" text="确定" />
                   <ChoiceBox fx:id="requmode" layoutX="249.0" layoutY="49.0" prefHeight="23.0" prefWidth="52.0" value="Get">
                       <String fx:value="Get" />
                       <Separator />
@@ -85,7 +85,7 @@
                               <Bloom />
                           </effect>
                       </ComboBox>
-                      <TabPane layoutY="144.0" prefHeight="422.0" prefWidth="1000.0" tabClosingPolicy="UNAVAILABLE" GridPane.rowIndex="2">
+                      <TabPane layoutY="144.0" prefHeight="539.0" prefWidth="1000.0" tabClosingPolicy="UNAVAILABLE" GridPane.rowIndex="2">
                           <tabs>
                               <Tab style="-fx-background-color: #a5c8a5;" text="漏洞测试">
                                   <content>

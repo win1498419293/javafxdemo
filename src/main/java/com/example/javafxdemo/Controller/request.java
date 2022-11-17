@@ -296,7 +296,6 @@ public class request {
          */
         public static void start(String url,String requmodes,String path) throws Exception {
             //String path="src/main/resources/com/example/javafxdemo/spring.txt";
-            Taskdemo tk=new Taskdemo();
             pathpara(path);
             String para;
             Date today = new Date();

@@ -54,11 +54,4 @@ public class Taskdemo extends Task <String>{
         }
         return req.msg.poll();
     }
-    public void initialize(){
-
-    }
-    public void test() throws Exception {
-        Taskdemo tk=new Taskdemo();
-
-    }
 }
